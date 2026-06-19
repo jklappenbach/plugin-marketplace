@@ -1,42 +1,71 @@
 ---
 name: td-develop
-description: Implement an approved spec + plan (docs/specs/<name>-spec.md and agents/<name>-plan.md) test-first, one plan unit at a time, keeping state accurate and visible in STACK.md. Use after /td-design once the plan is approved and coding begins.
+description: Implement an approved spec + plan (docs/specs/<name>-spec.md and agents/<name>-plan.md) by running its tasks through an explicit work stack in STACK.md — test-first, pushing subtasks/blockers and popping back, so the current focus and planned order are never lost. Use after /td-design once the plan is approved and coding begins.
 ---
 
-# td-develop — execute the plan, test-first, with visible state
+# td-develop — execute the plan as a task stack, test-first, with visible state
 
 Use this **after the spec and plan are approved**. It turns `agents/<name>-plan.md`
-into working code while leveraging the documents as the source of truth and keeping
-state accurate and **visible to the developer**.
+into working code by driving an explicit **work stack** recorded in `STACK.md`, so the
+current focus and the planned order of work are never lost.
 
-## State lives in `STACK.md` — keep it current
-`STACK.md` at the project root is the living work-state and the developer's dashboard.
-Update it regularly — at minimum when starting and finishing each unit of work. It
-should always show:
+## `STACK.md` is a work stack (LIFO), and the developer's dashboard
+`STACK.md` at the project root holds the live work stack. Keep it current — it always
+shows the stack top-to-bottom, the active plan/spec, and any blockers. Each entry is a
+**task reference, not a copy** of the task:
 
-- which **plan** (and the spec behind it) is active;
-- the **current unit of work** by its outline number, and its status;
-- what's **done / in progress / next**;
-- key **decisions, deviations from the plan, and blockers**, stated plainly.
+```
+[<plan-id>] <outline-id> — <task name>
+```
 
-## Execution loop — one plan unit at a time, in order
-For each numbered unit of work in `agents/<name>-plan.md`:
+i.e. the **plan's ID**, plus the task's **outline ID** and **name**.
 
-1. **TDD first.** Write the unit's **TDD** tests *before* implementation. They should
-   fail for the right reason before you write code.
-2. **Code.** Implement the unit's **Coding** items until all of that unit's tests pass.
-3. **Acceptance.** Verify every explicit **Acceptance** item, plus the implicit
-   criterion that all tests pass.
-4. **Commit.** A unit usually maps to one commit; commit once the unit is green and
-   accepted, referencing the plan item (e.g. `plan 3: <unit title>`).
-5. **Update `STACK.md`.** Mark the unit complete and advance the cursor to the next.
+## Starting a plan
+Plans are **ordered by dependency**: a body of work that depends on a line item
+naturally comes *after* that dependency. When a plan is started, **push its tasks onto
+the stack in reverse plan order** — so the **first task popped off the top is the first
+task in the plan**.
+
+## Working the stack
+Always work the task **on top of the stack**. For a coding task, run it **test-first**
+(per the plan's three line-item subsections):
+
+1. **TDD** — write the task's tests *first*; they should fail for the right reason.
+2. **Coding** — implement until all the task's tests pass.
+3. **Acceptance** — verify every explicit Acceptance item, plus the implicit criterion
+   that all tests pass.
+
+### Completing a task
+1. Mark the task's checkbox in the **plan doc** with an **`x`** → `- [x]`.
+2. **Pop** it from the top of the stack.
+3. Commit (a unit of work usually maps to one commit), referencing the task.
+4. Update `STACK.md`.
+
+### Interruption → push a subtask
+When a **subtask** is identified that must be worked **before** the current task — a
+tangent, a higher-priority item, or a blocker — **push it onto the top of the stack**
+and work it. When it's done, **pop** it to return to the previous task, exactly where
+you left off. This is how we never lose track of what we were working on, or the order
+in which we had planned the work.
+
+### Can't finish → mark blocked
+When a task **can't be finished due to an unexpected dependency**:
+1. Mark its checkbox in the plan with a **`~`** → `- [~]` (instead of `x`).
+2. Note a **reference to the blocking task or section** at the **end of the task line**.
+3. Typically push that dependency onto the stack as a subtask, then resume the blocked
+   task once the dependency clears.
+
+## Plan checkbox states
+- `- [ ]` — not started
+- `- [x]` — done (tests written first + passing, acceptance met)
+- `- [~]` — blocked / can't finish (unexpected dependency; reference noted at line end)
 
 ## Rules
-- **Traceability:** reference plan/spec item numbers in tests, commit messages, and
-  `STACK.md` so state is traceable back to the documents.
-- **Never skip TDD.** A unit is not "done" unless its tests were written first and pass.
-- **Keep the documents accurate.** If reality diverges from the plan, update the plan
-  (and note it in `STACK.md`) rather than silently drifting. Update the spec if the
+- **Traceability:** a stack entry carries `[plan-id] outline-id — name`; use the same
+  identifiers in commit messages and `STACK.md` so state traces back to the plan.
+- **Never skip TDD:** a task is "done" only when its tests were written first and pass.
+- **Keep the documents accurate:** if reality diverges from the plan, update the plan
+  (and note it in `STACK.md`) rather than silently drifting; update the spec if the
   *requirements* changed.
-- **Report honestly.** `STACK.md` is the dashboard — surface failing tests, skipped
-  steps, and blockers; never present unverified work as done.
+- **Report honestly:** `STACK.md` is the dashboard — show the real stack, failing
+  tests, and blockers (`~`); never present unverified work as done.

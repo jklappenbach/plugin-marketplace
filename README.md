@@ -101,3 +101,7 @@ metadata:
 
 The fact. Link related memories with [[other-slug]].
 ```
+
+## License
+
+[MIT](LICENSE) © Julian Klappenbach

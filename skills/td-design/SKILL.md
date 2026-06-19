@@ -62,6 +62,11 @@ Outline-number the whole document so every section and line item is uniquely
 identifiable (e.g. `3.2.1` = unit 3, TDD, item 1). Trace each unit back to the spec
 use case(s) it satisfies.
 
+Render each unit of work (and its line items) as a **markdown checkbox** (`- [ ]`) so
+`/td-develop` can track progress against them — it marks `- [x]` when done and `- [~]`
+when blocked. Because `/td-develop` works the plan as a dependency-ordered stack,
+**order the units by dependency**: any unit that depends on another must come after it.
+
 ## 3. Approval and hand-off
 
 Both documents are drafts until the developer approves them. On approval, hand off to
