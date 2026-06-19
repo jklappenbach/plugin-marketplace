@@ -1,0 +1,48 @@
+---
+name: td-project-workflow
+description: Standard project layout (docs/, agents/, STACK.md, spec/plan files) and the spec→plan→develop workflow governed by the /td-design and /td-develop skills
+metadata:
+  type: feedback
+---
+
+# Project initialization & the spec → plan → develop workflow
+
+## Project structure
+Initialize every project with this layout:
+- **This memory file** at the project root.
+- **`docs/`** off the root, with a **`specs/`** subdirectory.
+- **`agents/`** off the root.
+- **`STACK.md`** at the root — create it and keep it updated regularly.
+- **Specs** live at `docs/specs/[name]-spec.md`.
+- **Plans** live at `agents/[name]-plan.md`.
+
+## What a spec is (a.k.a. SRD / SRS)
+A spec focuses on the **requirements and use cases** — the **why** and the **what**.
+Structure:
+- A **definition section** that defines the application, feature, or capability.
+- **Feature subsections** that decompose aspects of the design or featureset, each
+  complete with **enumerated use cases**.
+
+## What a plan is
+A plan is the specification converted into an **actionable work request**. It includes:
+- A basic description of the work.
+- The APIs, SDKs, or systems to be used.
+- What should be **deliverable** once the work is complete.
+
+Then a subsection for **each unit of work** (usually corresponding to one commit),
+each containing three subsections of line items:
+1. **TDD** — the tests written *before* coding starts. Passing all of these tests is
+   part of the implicit acceptance criteria for the section.
+2. **Coding** — the actual implementation items.
+3. **Acceptance** — any explicit requirements beyond tests passing.
+
+The entire document is **numbered in outline format** so every section and line item
+has a unique identifier.
+
+## Workflow
+1. **Scoping new work** → first create a new spec and write it *with the developer*.
+   Load the **`/td-design`** skill — it governs the authoring of *both* the spec and
+   the plan.
+2. **Once the spec and plan are complete and approved** → load the **`/td-develop`**
+   skill. It ensures the documents are leveraged to accurately store state, and that
+   state stays visible to the developer.
