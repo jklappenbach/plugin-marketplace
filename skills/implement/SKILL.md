@@ -32,13 +32,20 @@ It is **shared across clones** (committed in `agents/`, no per-clone copy) becau
 plan is **single-writer** — only one working copy works a given plan at a time — so
 there is nothing to bleed.
 
-Each entry is a **task reference, not a copy**:
+Each entry is **exactly one line: the task's canonical outline id, nothing else** —
+a reference into the plan, not a copy:
 
 ```
-<outline-id> — <task name>
+<outline-id>
 ```
 
-the task's **outline ID** and **name** from that plan.
+**Focus files are bare id stacks.** No task name, description, status, scope notes,
+decisions, history, ✅/done prose, or multi-line blocks — the plan
+(`<name>-plan.md`) holds *all* of that, and the id is the link back to it. One line
+per task, top = current. If an entry seems to need more than its id, that detail
+belongs in the plan: add/expand the task there (so it has an id) and keep only the
+id here. Discovered work is captured the same way — promote it into the plan first,
+then park its id on the stack — never as prose in the focus file.
 
 ### Focus stack — `agents/state/<clone-id>/focus.md` (one PER CLONE, cross-plan)
 A **thin** LIFO of **which plan/context you're attending to** — frames, not tasks:
@@ -175,16 +182,19 @@ clone without `agents/`, degrade gracefully — work from whatever's present rat
 erroring; create `state/<clone-id>/` the first time you write the focus stack.
 
 ## Rules
-- **Traceability:** `focus.md` frames carry `[plan-id]`; per-plan entries carry
-  `outline-id — name`. Use the same identifiers in commit messages so state traces back
-  to the plan.
+- **One line per entry, id only:** a focus file is a bare LIFO of canonical ids —
+  `focus.md` frames are `[plan-id]` (or `[explore: <what>]`); per-plan entries are a
+  bare `outline-id`. Never a name, status, note, or multi-line block. All detail lives
+  in the plan; the focus file just points at it. Use the same ids in commit messages so
+  state traces back to the plan.
 - **Never skip TDD:** a task is "done" only when its tests were written first and pass.
 - **Keep the documents accurate:** if reality diverges from the plan, update the plan
   (and reflect it in the stack) rather than silently drifting; update the spec if the
   *requirements* changed.
-- **Keep the stacks thin:** they hold *doing* and *discovered*, never *done* — completion
-  lives in the plan's checkboxes. If a task stack starts looking like a second plan,
-  promote those items into the plan instead. There is **no** separate completed-log file.
+- **Keep the stacks thin:** one line (a bare id) per entry — they hold *doing* and
+  *discovered* as ids, never *done* and never prose; completion lives in the plan's
+  checkboxes. The moment an entry wants a sentence, that's the signal to put it in the
+  plan and keep only its id here. There is **no** separate completed-log file.
 - **Options track the stack:** every next-step option you offer is a stack item; the
   unchosen ones get pushed (deferred), and the options you present are read off the stack.
   Offered choices and recorded stack never diverge.
