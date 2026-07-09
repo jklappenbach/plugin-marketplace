@@ -28,7 +28,7 @@ If any of these are missing, initialize them at the project root first:
 ├── docs/                        # user-facing documentation ONLY (guide, reference; markdown)
 └── agents/
     ├── <name>-plan.md           #   one plan per unit of work (shared across clones)
-    ├── <clone>/focus.md         #   this working copy's focus stack (maintained by implement)
+    ├── state/<clone-id>/focus.md #  this working copy's focus stack (maintained by implement)
     └── archive/                 #   completed plans (moved here when the plan closes)
 ```
 

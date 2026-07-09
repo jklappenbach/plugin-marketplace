@@ -1,6 +1,6 @@
 ---
 name: td-project-workflow
-description: Standard project layout (specs/ with INDEX + archive, docs/ for user documentation only, agents/ plans + a per-working-copy focus stack) and the spec→plan→develop workflow governed by the design and implement skills
+description: Standard project layout (specs/ with INDEX + archive, docs/ for user documentation only, agents/ plans + a per-clone focus stack under agents/state/) and the spec→plan→develop workflow governed by the design and implement skills
 metadata:
   type: feedback
 ---
@@ -22,11 +22,11 @@ Initialize every project with this layout:
 - **`agents/`** off the root.
   - Plans live at `agents/[name]-plan.md`; completed plans move to
     **`agents/archive/`**.
-  - **`agents/[clone]/focus.md`** — the focus stack for *this working copy*
-    (maintained by the **implement** skill), where `[clone]` is the basename of
-    the working copy's root directory. Plans are shared across clones; attention
-    is not. Completion status lives in the plan's checkboxes — there is **no**
-    separate completed-log.
+  - **`agents/state/[clone-id]/focus.md`** — the focus stack for *this working
+    copy* (maintained by the **implement** skill), where `[clone-id]` is
+    `<hostname>-<slugified-absolute-path>`. Plans are shared across clones;
+    attention is not. Completion status lives in the plan's checkboxes — there is
+    **no** separate completed-log.
 
 ## What a spec is (a.k.a. SRD / SRS)
 A spec focuses on the **requirements and use cases** — the **why** and the **what**.
@@ -61,7 +61,7 @@ removes it**: when every unit in `agents/[name]-plan.md` is `- [x]`, move
 `agents/archive/`, and drop the INDEX row. The archived spec + plan pair
 (checkboxes intact) is the durable record — never a separate completed-log.
 
-## Work state — the focus stack (`agents/[clone]/focus.md`)
+## Work state — the focus stack (`agents/state/[clone-id]/focus.md`)
 A LIFO of attention: top = what you're working now. Entries are one line each —
 `<plan>:<outline-id>` for plan work, `[explore: <what>]` for unplanned work.
 Interrupts push; completions pop; what surfaces is what you were doing. The stack
@@ -69,12 +69,13 @@ records **departures from plan order only** — the plan's checkboxes and
 dependency ordering already say what's next, so an empty stack means "follow the
 active plan."
 
-The stack is **homed per working copy**: `[clone]` is the basename of the working
-copy's root directory, so `~/code/cpp/cajeta` writes `agents/cajeta/focus.md` and
-`~/code/cpp/cajeta-two` writes `agents/cajeta-two/focus.md`. Sibling clones
-routinely share one `agents/` repo — they share plans and specs, but attention is
-per working copy, and a single shared `focus.md` would be corrupted by concurrent
-agents. Each clone writes only its own file. The **implement** skill governs this.
+The stack is **homed per working copy** under `agents/state/[clone-id]/focus.md`,
+where `[clone-id]` is `<hostname>-<slug>` and `<slug>` is the clone's absolute
+path with the leading `/` dropped and every `/` replaced by `-` (e.g.
+`proton-home-julian-code-cpp-cajeta-two`). Sibling clones routinely share one
+`agents/` repo — they share plans and specs, but attention is per working copy,
+and a single shared `focus.md` would be corrupted by concurrent agents. Each clone
+writes only its own file. The **implement** skill governs this.
 
 ## Workflow
 1. **Scoping new work** → first create a new spec and write it *with the developer*.

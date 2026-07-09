@@ -1,6 +1,6 @@
 {
   "name": "twilight",
-  "description": "Spec → plan → develop workflow for Claude Code: design authors the spec (specs/<name>-spec.md, registered in specs/INDEX.md) + plan, implement executes the plan test-first driving a per-working-copy focus stack (agents/<clone>/focus.md) and archives spec + plan on close.",
+  "description": "Spec → plan → develop workflow for Claude Code: design authors the spec (specs/<name>-spec.md, registered in specs/INDEX.md) + plan, implement executes the plan test-first driving a per-clone focus stack (agents/state/<clone-id>/focus.md) and archives spec + plan on close.",
   "version": "0.6.0",
   "author": {
     "name": "Julian Klappenbach",

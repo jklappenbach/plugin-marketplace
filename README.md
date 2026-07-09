@@ -70,12 +70,12 @@ description: One line telling Claude WHEN to use this skill (required)
   TDD-structured plan (`agents/<name>-plan.md`). Specs are workflow artifacts and
   live at the project root, never under `docs/` (user documentation only).
 - **`implement`** — executes the approved plan **test-first**, driving this working
-  copy's **focus stack** (`agents/<clone>/focus.md`): a LIFO of attention where
+  copy's **focus stack** (`agents/state/<clone-id>/focus.md`): a LIFO of attention where
   interrupts push (`<plan>:<outline-id>` or `[explore: <what>]`) and completions pop,
   so you always return to what you were doing. The stack records departures from plan
   order only — the plan's checkboxes and dependency ordering say what's next; an empty
   stack means "follow the active plan." Plans and specs are shared across clones; the
-  focus stack is homed under the working copy's directory name, so sibling clones never
+  focus stack is keyed by hostname + working-copy path, so sibling clones never
   collide. Marks plan checkboxes `x` (done) / `~` (blocked); completion lives in the
   plan. On close it archives the pair (`specs/archive/`, `agents/archive/`) and drops
   the spec's row from `specs/INDEX.md`.
@@ -134,16 +134,14 @@ The fact. Link related memories with [[other-slug]].
 
 ## Recent Updates
 
-- **v0.6.0 — One focus stack, still homed per clone; INDEX + archive lifecycle.**
-  Collapses the two-level stack into a single LIFO that records **departures from plan
-  order only** — the plan's checkboxes and dependency ordering already say what's next,
-  so an empty stack means "follow the active plan," and the per-plan task stacks go
-  away. The stack keeps its **per-clone home**, now at the much shorter
-  `agents/<clone>/focus.md` (`<clone>` = the working copy's directory basename,
-  replacing v0.4.0's `agents/state/<hostname>-<slugified-path>/`). Specs move to
-  `specs/<name>-spec.md` (workflow artifacts — never under `docs/`, which is user
-  documentation only), are registered in `specs/INDEX.md` while active, and the spec +
-  plan pair is archived on close.
+- **v0.6.0 — One focus stack; INDEX + archive lifecycle.** Collapses the two-level
+  stack into a single LIFO that records **departures from plan order only** — the
+  plan's checkboxes and dependency ordering already say what's next, so an empty stack
+  means "follow the active plan," and the per-plan task stacks go away. The stack keeps
+  v0.4.0's **per-clone home** unchanged at `agents/state/<clone-id>/focus.md`, so
+  existing stacks migrate as-is. Specs move to `specs/<name>-spec.md` (workflow
+  artifacts — never under `docs/`, which is user documentation only), are registered in
+  `specs/INDEX.md` while active, and the spec + plan pair is archived on close.
 - **v0.4.0 — Per-clone focus stack (no cross-clone bleed).** When several working
   copies share one `agents/` repo, the global focus stack moves to
   `agents/state/<clone-id>/focus.md` (`<clone-id>` = hostname + slugified working-copy
