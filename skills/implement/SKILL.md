@@ -120,6 +120,9 @@ present; create `state/<clone-id>/focus.md` on first push.
   follow the plan.
 - **Focus is per clone** — write only your own `state/<clone-id>/focus.md`; never
   read or edit a sibling clone's.
+- **Plans carry no focus** — there are no per-plan `<name>-focus.md` files. "Where
+  I was in plan X" is the plan's first unchecked (`- [ ]`) or blocked (`- [~]`)
+  item; a second copy of that only creates a way for the two to disagree.
 - **Never skip TDD** — a task is done only when its tests were written first and pass.
 - **Keep the documents accurate** — if reality diverges from the plan, update the
   plan; update the spec if the *requirements* changed.

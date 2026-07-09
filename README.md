@@ -134,6 +134,12 @@ The fact. Link related memories with [[other-slug]].
 
 ## Recent Updates
 
+- **v0.6.2 — Plans carry no focus.** Per-plan `<name>-focus.md` files are retired.
+  A plan's checkboxes own completion and its dependency ordering says what's next, so
+  "where I was in plan X" is always derivable — it is that plan's first unchecked or
+  blocked item. Keeping a second copy only created a way for the two to disagree. The
+  only stack left is the per-clone one at `agents/state/<clone-id>/focus.md`, and a
+  clone writes only its own file.
 - **v0.6.0 — One focus stack; INDEX + archive lifecycle.** Collapses the two-level
   stack into a single LIFO that records **departures from plan order only** — the
   plan's checkboxes and dependency ordering already say what's next, so an empty stack
