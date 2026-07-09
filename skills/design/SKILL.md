@@ -1,6 +1,6 @@
 ---
 name: design
-description: Author or revise a spec (docs/specs/<name>-spec.md) and its plan (agents/<name>-plan.md) when scoping new work — requirements + enumerated use cases in the spec, an outline-numbered TDD work plan in the plan. Use when starting a new application, feature, or capability. Governs both documents.
+description: Author or revise a spec (specs/<name>-spec.md) and its plan (agents/<name>-plan.md) when scoping new work — requirements + enumerated use cases in the spec, an outline-numbered TDD work plan in the plan, registered in specs/INDEX.md. Use when starting a new application, feature, or capability. Governs both documents.
 ---
 
 # design — author the spec and the plan
@@ -20,13 +20,16 @@ If any of these are missing, initialize them at the project root first:
 ```
 <root>/
 ├── td-project-workflow.md       # the governing memory at the root
-├── docs/
-│   └── specs/                   # specs:  docs/specs/<name>-spec.md
-└── agents/                      # plans + work stacks (stacks maintained by implement):
-    ├── <name>-plan.md           #   one plan per unit of work (SHARED across clones)
-    ├── <name>-focus.md          #   per-plan task stack, LIFO (SHARED; single-writer per plan)
-    └── state/<clone-id>/
-        └── focus.md             #   cross-plan focus stack — PER CLONE (no bleed)
+├── specs/                       # work specs — workflow artifacts, NEVER under docs/
+│   ├── INDEX.md                 #   active-work index: spec ↔ plan ↔ status
+│   ├── <name>-spec.md           #   one spec per unit of work
+│   ├── schemas/                 #   machine-readable artifacts (JSON schemas, protocols)
+│   └── archive/                 #   completed specs (moved here when the plan closes)
+├── docs/                        # user-facing documentation ONLY (guide, reference; markdown)
+└── agents/
+    ├── <name>-plan.md           #   one plan per unit of work (shared across clones)
+    ├── <clone>/focus.md         #   this working copy's focus stack (maintained by implement)
+    └── archive/                 #   completed plans (moved here when the plan closes)
 ```
 
 **Install the governing memory.** This skill bundles `td-project-workflow.md`. On
@@ -41,7 +44,12 @@ import line to the project's `CLAUDE.md`:
 `${CLAUDE_PLUGIN_ROOT}/skills/design/td-project-workflow.md`; as a standalone skill
 it sits beside this `SKILL.md`.)
 
-## 1. Write the spec → `docs/specs/<name>-spec.md`
+## 1. Write the spec → `specs/<name>-spec.md`
+
+**Register it immediately**: add a row to `specs/INDEX.md` with status `draft`
+(create the file with a `| Spec | Plan | Status |` table if missing). The INDEX
+lists **active work only** — the **implement** skill removes the row and archives
+the documents when the plan closes.
 
 A spec (a.k.a. SRD / SRS) focuses on **requirements and use cases — the why and the
 what**, never the implementation. Outline-number every section and item so each is
@@ -56,6 +64,11 @@ uniquely addressable (1, 1.1, 1.1.1, …).
 
 Drive it as a conversation — surface open questions and trade-offs, recommend, and
 converge. **Do not start the plan until the spec is approved.**
+
+**Prose style (specs, plans, and all authored documents):** brief, plain, direct.
+No filler, no flowery phrasing, no "it's not just X, it's Y" constructions, no
+tropes that read as AI-generated. If a sentence works without a clause, drop the
+clause.
 
 ## 2. Write the plan → `agents/<name>-plan.md`
 
@@ -79,11 +92,12 @@ use case(s) it satisfies.
 
 Render each unit of work (and its line items) as a **markdown checkbox** (`- [ ]`) so
 the **implement** skill can track progress against them — it marks `- [x]` when done
-and `- [~]` when blocked. Because **implement** loads the plan onto a per-plan task stack
-(`agents/<name>-focus.md`) in dependency order, **order the units by dependency**: any
-unit that depends on another must come after it.
+and `- [~]` when blocked. Because **implement** works units in plan order ("next" is
+always the first unchecked item), **order the units by dependency**: any unit that
+depends on another must come after it.
 
 ## 3. Approval and hand-off
 
-Both documents are drafts until the developer approves them. On approval, hand off to
-the **implement** skill to build the plan.
+Both documents are drafts until the developer approves them. On approval, flip the
+spec's row in `specs/INDEX.md` from `draft` to `active` and hand off to the
+**implement** skill to build the plan.
